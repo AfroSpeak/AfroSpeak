@@ -26,10 +26,13 @@
                 'Content-Type': 'application/json'
             };
 
-            const body = {
-                inputs: "Afro-pessimist: \"The limitations of Black existence are defined by anti-Black structures.\" Afrofuturist: \"But the future holds possibilities that break these chains. Let's imagine...\"",
-                parameters: { max_new_tokens: 100 }
-            };
+         const body = {
+    inputs: `Afro-pessimist: "The limitations of Black existence are defined by anti-Black structures." 
+             Afrofuturist: "But the future holds possibilities that break these chains. Let’s imagine a future where technology empowers Black people to transcend the constraints of history."
+             Afro-pessimist: "What if these new technologies are just new forms of control?" 
+             Afrofuturist: "We can shape the technology to serve us, not oppress us. It’s a chance to rebuild our world on our own terms."`,
+    parameters: { max_new_tokens: 150, temperature: 0.8 }
+};
 
             try {
                 const response = await fetch(endpoint, {
