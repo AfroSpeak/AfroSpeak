@@ -1,24 +1,39 @@
-let conversation = `Afro-pessimist: "The limitations of Black existence are defined by anti-Black structures." 
-                     Afrofuturist: "But the future holds possibilities that break these chains. Let’s imagine..."`;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afro-pessimist & Afrofuturist Dialogue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #conversation {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
 
-let voices = [];
-
-window.speechSynthesis.onvoiceschanged = function() {
-    voices = speechSynthesis.getVoices();
-    console.log(voices); // Logs available voices to the console
-};
-
-async function generateDialogue() {
-    const apiKey = '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';  // Replace with your Hugging Face API token
-    const endpoint = 'https://api-inference.huggingface.co/models/EleutherAI/gpt-neo-2.7B';  // Using GPT-Neo
-
-    const headers = {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-    };
-
-    const body = {
-        inputs: Afro-pessimist: "We need to face reality. Every so-called advancement—whether political, economic, or technological—eventually falls into the hands of anti-Black structures. Look at how algorithms in modern AI replicate systemic racism, from facial recognition biases to discriminatory policing. How can we trust a future built on these systems?"
+    <h1>Afro-pessimist & Afrofuturist Dialogue</h1>
+    <div id="conversation">Afro-pessimist: "We need to face reality. Every so-called advancement—whether political, economic, or technological—eventually falls into the hands of anti-Black structures. Look at how algorithms in modern AI replicate systemic racism, from facial recognition biases to discriminatory policing. How can we trust a future built on these systems?"
 
     Afrofuturist: "You're right that the past is filled with these examples, but we’re entering an era where Black people can take control of these technologies. By actively participating in the development of AI, we can write our own future and remove the biases embedded in the system. Look at African innovators leading the charge in blockchain technology to decentralize power and create financial independence."
 
@@ -37,45 +52,75 @@ async function generateDialogue() {
     Afro-pessimist: "I see your point about African tech hubs, but how can they survive when Western corporations still control global markets? Tech hubs may emerge, but they won’t escape the reach of the global systems that extract their resources. Decentralization sounds good, but it’s still within a capitalist framework, one that’s been inherently anti-Black."
 
     Afrofuturist: "That’s why we must build ecosystems that prioritize cultural sovereignty over profit. Afrofuturism isn’t just about technology—it’s about governance, culture, and community. We need to create structures where Black people own the means of production, from digital economies to cultural expression. We can build an alternative reality—one that is free from the constraints of white supremacy. It’s not just about survival; it’s about thriving and reclaiming the future."
-conversation + '\nAfro-pessimist:',
-        parameters: { max_new_tokens: 200, temperature: 0.9 }
-    };
+    </div>
+    <button onclick="generateDialogue()">Generate Dialogue</button>
 
-    try {
-        const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(body)
-        });
+    <!-- JavaScript section for handling the dialogue generation and text-to-speech -->
+    <script>
+        let conversation = `Afro-pessimist: "The limitations of Black existence are defined by anti-Black structures." 
+                             Afrofuturist: "But the future holds possibilities that break these chains. Let’s imagine..."`;
 
-        const data = await response.json();
-        const newDialogue = data[0]?.generated_text || "No new dialogue generated.";
+        let voices = [];
 
-        // Append the new part of the conversation
-        conversation += '\n' + newDialogue;
-        document.getElementById('conversation').innerText = conversation;
+        // Load the voices and assign them to the characters
+        window.speechSynthesis.onvoiceschanged = function() {
+            voices = speechSynthesis.getVoices();
+            console.log(voices); // Logs available voices to the console for selection
+        };
 
-        // Use Web Speech API to read out the conversation
-        const lines = newDialogue.split("\n");
-        lines.forEach(line => {
-            let utterance = new SpeechSynthesisUtterance(line);
+        async function generateDialogue() {
+            const apiKey = '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';  // Replace with your Hugging Face API token
+            const endpoint = 'https://api-inference.huggingface.co/models/EleutherAI/gpt-neo-2.7B';  // Using GPT-Neo
 
-            // Make sure voices are loaded before assigning them
-            if (voices.length > 0) {
-                if (line.includes("Afro-pessimist")) {
-                    utterance.voice = voices.find(voice => voice.name === "Google UK English Male") || voices[0]; // Fallback to first available voice
-                } else if (line.includes("Afrofuturist")) {
-                    utterance.voice = voices.find(voice => voice.name === "Google UK English Female") || voices[1]; // Fallback to second available voice
-                }
-                speechSynthesis.speak(utterance);
-            } else {
-                console.error('Voices not loaded yet. Defaulting to system voice.');
-                speechSynthesis.speak(utterance); // Use default system voice
+            const headers = {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+            };
+
+            const body = {
+                inputs: conversation + '\nAfro-pessimist:',
+                parameters: { max_new_tokens: 100, temperature: 0.85 }
+            };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(body)
+                });
+
+                const data = await response.json();
+                const newDialogue = data[0]?.generated_text || "No new dialogue generated.";
+
+                // Append the new part of the conversation
+                conversation += '\n' + newDialogue;
+                document.getElementById('conversation').innerText = conversation;
+
+                // Use Web Speech API to read out the conversation
+                const lines = newDialogue.split("\n");
+                lines.forEach(line => {
+                    let utterance = new SpeechSynthesisUtterance(line);
+
+                    // Make sure voices are loaded before assigning them
+                    if (voices.length > 0) {
+                        if (line.includes("Afro-pessimist")) {
+                            utterance.voice = voices.find(voice => voice.name === "Google UK English Male") || voices[0]; // Fallback to first available voice
+                        } else if (line.includes("Afrofuturist")) {
+                            utterance.voice = voices.find(voice => voice.name === "Google UK English Female") || voices[1]; // Fallback to second available voice
+                        }
+                        speechSynthesis.speak(utterance);
+                    } else {
+                        console.error('Voices not loaded yet. Defaulting to system voice.');
+                        speechSynthesis.speak(utterance); // Use default system voice
+                    }
+                });
+
+            } catch (error) {
+                console.error('Error generating text:', error);
+                document.getElementById('conversation').innerText = "An error occurred. Please try again.";
             }
-        });
+        }
+    </script>
 
-    } catch (error) {
-        console.error('Error generating text:', error);
-        document.getElementById('conversation').innerText = "An error occurred. Please try again.";
-    }
-}
+</body>
+</html>
