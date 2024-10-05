@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afro Dialogue</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f0f0f0; }
+        #conversation { margin: 20px 0; padding: 10px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Afro-pessimist and Afrofuturist Dialogue</h1>
+    <div id="conversation">Click below to generate the conversation.</div>
+    <button onclick="generateDialogue()">Generate Dialogue</button>
+
+    <script>
+        async function generateDialogue() {
+            const apiKey = 'your-hugging-face-api-token';  // Add your Hugging Face API token here
+            const endpoint = 'https://api-inference.huggingface.co/models/gpt2'; // You can change the model here if you prefer GPT-J, etc.
+
+            const headers = {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+            };
+
+            const body = {
+                inputs: "Afro-pessimist: \"The limitations of Black existence are defined by anti-Black structures.\" Afrofuturist: \"But the future holds possibilities that break these chains. Let's imagine...\"",
+                parameters: { max_new_tokens: 100 }
+            };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(body)
+                });
+
+                const data = await response.json();
+                document.getElementById('conversation').innerText = data[0].generated_text;
+            } catch (error) {
+                console.error('Error generating text:', error);
+                document.getElementById('conversation').innerText = "An error occurred. Please try again.";
+            }
+        }
+    </script>
+</body>
+</html>
