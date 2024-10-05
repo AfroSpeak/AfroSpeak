@@ -3,36 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Afro Dialogue</title>
+    <title>Afro-pessimist & Afrofuturist Dialogue</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f0f0f0; }
-        #conversation { margin: 20px 0; padding: 10px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+        #conversation { margin: 20px 0; padding: 15px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
         button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
         button:hover { background-color: #0056b3; }
     </style>
 </head>
 <body>
-    <h1>Afro-pessimist and Afrofuturist Dialogue</h1>
-    <div id="conversation">Click below to generate the conversation.</div>
+
+    <h1>Afro-pessimist & Afrofuturist Dialogue</h1>
+    <div id="conversation">
+        Afro-pessimist: "The limitations of Black existence are defined by anti-Black structures."
+        <br>Afrofuturist: "But the future holds possibilities that break these chains. Let’s imagine..."
+    </div>
     <button onclick="generateDialogue()">Generate Dialogue</button>
 
     <script>
+        let conversation = `Afro-pessimist: "The limitations of Black existence are defined by anti-Black structures." 
+                             Afrofuturist: "But the future holds possibilities that break these chains. Let’s imagine..."`;
+
         async function generateDialogue() {
             const apiKey = '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';  // Add your Hugging Face API token here
-            const endpoint = 'https://api-inference.huggingface.co/models/gpt2'; // You can change the model here if you prefer GPT-J, etc.
+            const endpoint = 'https://api-inference.huggingface.co/models/EleutherAI/gpt-neo-2.7B'; // Using GPT-Neo
 
             const headers = {
                 'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json'
             };
 
-         const body = {
-    inputs: `Afro-pessimist: "The limitations of Black existence are defined by anti-Black structures." 
-             Afrofuturist: "But the future holds possibilities that break these chains. Let’s imagine a future where technology empowers Black people to transcend the constraints of history."
-             Afro-pessimist: "What if these new technologies are just new forms of control?" 
-             Afrofuturist: "We can shape the technology to serve us, not oppress us. It’s a chance to rebuild our world on our own terms."`,
-    parameters: { max_new_tokens: 150, temperature: 0.9 }
-};
+            const body = {
+                inputs: conversation + '\nAfro-pessimist:',
+                parameters: { max_new_tokens: 100, temperature: 0.85 }
+            };
 
             try {
                 const response = await fetch(endpoint, {
@@ -42,12 +46,35 @@
                 });
 
                 const data = await response.json();
-                document.getElementById('conversation').innerText = data[0].generated_text;
+                const newDialogue = data[0]?.generated_text || "Error: No dialogue generated";
+
+                // Append the new part of the conversation
+                conversation += '\n' + newDialogue;
+                document.getElementById('conversation').innerText = conversation;
+
+                // Use Web Speech API to read out the conversation
+                const lines = newDialogue.split("\n");
+                lines.forEach(line => {
+                    let utterance = new SpeechSynthesisUtterance(line);
+                    if (line.includes("Afro-pessimist")) {
+                        utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === "Google UK English Male");
+                    } else if (line.includes("Afrofuturist")) {
+                        utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === "Google UK English Female");
+                    }
+                    speechSynthesis.speak(utterance);
+                });
+
             } catch (error) {
                 console.error('Error generating text:', error);
                 document.getElementById('conversation').innerText = "An error occurred. Please try again.";
             }
         }
+
+        // Fetch voices and trigger event when available
+        window.speechSynthesis.onvoiceschanged = () => {
+            console.log(speechSynthesis.getVoices());
+        };
     </script>
+
 </body>
 </html>
