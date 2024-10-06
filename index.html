@@ -38,8 +38,26 @@
     <button onclick="generateDialogue()">Generate Dialogue</button>
 
     <script>
-        let conversation = Afro-pessimist: "I think." 
-                             Afrofuturist: "I believe.";
+        let conversation = `Afro-pessimist: "I need to face reality. Every so-called advancement—whether political, economic, or technological—eventually falls into the hands of anti-Black structures. Look at how algorithms in modern AI replicate systemic racism, from facial recognition biases to discriminatory policing. How can we trust a future built on these systems?"
+
+        Afrofuturist: "You're right that the past is filled with these examples, but we’re entering an era where Black people can take control of these technologies. By actively participating in the development of AI, we can write our own future and remove the biases embedded in the system. Look at African innovators leading the charge in blockchain technology to decentralize power and create financial independence."
+
+        Afro-pessimist: "Blockchain? Even if Black people gain some control over the technology, the power structures won't let us operate freely. The powers that be, whether corporate or governmental, will find ways to co-opt and corrupt even decentralized systems. The legacy of systemic oppression isn’t something you can simply innovate away."
+
+        Afrofuturist: "But history shows that Black people have always innovated under pressure. Think of the creation of jazz, hip-hop, and even soul food—each was born from a need to survive in the face of oppression. We’ve always found ways to create something new from the structures designed to hold us back. Technology is just the next frontier where we can apply that same creativity."
+
+        Afro-pessimist: "Cultural resistance is different from technological revolution. Our creations—whether music or cuisine—are constantly commodified and sold back to us. What makes you think that won’t happen with AI? What happens when Black technologists create something revolutionary, only to have it co-opted, repackaged, and used against us, just like every other Black innovation?"
+
+        Afrofuturist: "I won’t deny that history shows how Black creativity has been commodified, but this time, we have the chance to build the systems ourselves. Instead of just creating within the confines of oppressive structures, we can build the very foundations. Take Afrofuturism itself—it’s not just about technology but about reimagining time, space, and existence. Think of it like Octavia Butler’s ‘Parable of the Sower’—we have to imagine new worlds and work towards making them reality."
+
+        Afro-pessimist: "You speak of imagining new worlds, but the physical world doesn’t change through imagination alone. Black people live under constant surveillance, incarceration, and economic deprivation. The problem isn’t that we lack creativity, but that we lack power. Power doesn’t come from dreaming—it comes from dismantling the systems that keep us oppressed. How do you plan to achieve that?"
+
+        Afrofuturist: "Power can come from reshaping the narrative and creating structures outside the ones that are built to oppress us. Decentralization, AI ethics, and cultural reclamation are tools we can use to escape the cycles of oppression. Look at the rise of African tech hubs in Lagos, Nairobi, and Johannesburg. These spaces represent a new kind of power—one that doesn’t rely on approval from the West."
+
+        Afro-pessimist: "I see your point about African tech hubs, but how can they survive when Western corporations still control global markets? Tech hubs may emerge, but they won’t escape the reach of the global systems that extract their resources. Decentralization sounds good, but it’s still within a capitalist framework, one that’s been inherently anti-Black."
+
+        Afrofuturist: "That’s why we must build ecosystems that prioritize cultural sovereignty over profit. Afrofuturism isn’t just about technology—it’s about governance, culture, and community. We need to create structures where Black people own the means of production, from digital economies to cultural expression. We can build an alternative reality—one that is free from the constraints of white supremacy. It’s not just about survival; it’s about thriving and reclaiming the future."
+        `;
 
         let voices = [];
 
@@ -54,7 +72,7 @@
             const endpoint = 'https://api-inference.huggingface.co/models/EleutherAI/gpt-neo-2.7B';  // Using GPT-Neo
 
             const headers = {
-                'Authorization': Bearer ${apiKey},
+                'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json'
             };
 
