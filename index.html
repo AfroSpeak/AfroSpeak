@@ -42,12 +42,23 @@
                              Afrofuturist: "I believe."`;
 
         let voices = [];
+let pessimistVoice, futuristVoice;
 
-        // Load the voices and assign them to the characters
-        window.speechSynthesis.onvoiceschanged = function() {
-            voices = speechSynthesis.getVoices();
-            console.log(voices); // Logs available voices to the console for selection
-        };
+// Function to set voices and assign to the characters
+function setVoices() {
+    voices = speechSynthesis.getVoices();
+    
+    // Try to find specific voices
+    pessimistVoice = voices.find(voice => voice.name === "Google UK English Male") || voices[0]; // Fallback to first voice if not available
+    futuristVoice = voices.find(voice => voice.name === "Google UK English Female") || voices[1]; // Fallback to second voice if not available
+    
+    console.log("Pessimist Voice: ", pessimistVoice);
+    console.log("Futurist Voice: ", futuristVoice);
+}
+
+// Call setVoices when voices change (happens asynchronously)
+speechSynthesis.onvoiceschanged = setVoices;
+
 
         async function generateDialogue() {
             const apiKey = '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';  // Replace with your Hugging Face API token
