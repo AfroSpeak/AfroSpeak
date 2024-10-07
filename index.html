@@ -78,49 +78,57 @@
 
             const body = {
                 inputs: conversation,
-                parameters: { max_new_tokens: 200, temperature: 0.9 }
+                parameters: { max_new_tokens: 500, temperature: 1.0 }
             };
 
-            try {
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: headers,
-                    body: JSON.stringify(body)
-                });
+// Keep only the last 10 lines of the conversation
+    const conversationSnippet = conversation.split('\n').slice(-10).join('\n');
 
-                const data = await response.json();
-                const newDialogue = data[0]?.generated_text || "No new dialogue generated.";
+    const body = {
+        inputs: conversationSnippet,
+        parameters: { max_new_tokens: 200, temperature: 0.9 }
+    };
 
-                // Append the new part of the conversation
-                conversation += '\n' + newDialogue;
-                document.getElementById('conversation').innerText = conversation;
+    try {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(body)
+        });
 
-                // Use Web Speech API to read out the conversation
-                const lines = newDialogue.split("\n");
-                lines.forEach(line => {
-                    let utterance = new SpeechSynthesisUtterance(line);
+        const data = await response.json();
+        const newDialogue = data[0]?.generated_text || "No new dialogue generated.";
 
-                    if (voices.length > 0) {
-                        if (line.includes("Afro-pessimist")) {
-                            utterance.voice = voices.find(voice => voice.name === "Google UK English Male") || voices[0]; // Fallback to first available voice
-                        } else if (line.includes("Afrofuturist")) {
-                            utterance.voice = voices.find(voice => voice.name === "Google UK English Female") || voices[1]; // Fallback to second available voice
-                        }
-                        speechSynthesis.speak(utterance);
-                    } else {
-                        console.error('Voices not loaded yet. Defaulting to system voice.');
-                        speechSynthesis.speak(utterance); // Use default system voice
-                    }
-                });
+        // Append the new part of the conversation
+        conversation += '\n' + newDialogue;
+        document.getElementById('conversation').innerText = conversation;
 
-            } catch (error) {
-                console.error('Error generating text:', error);
-                document.getElementById('conversation').innerText = "An error occurred. Please try again.";
+        // Use Web Speech API to read out the conversation
+        const lines = newDialogue.split("\n");
+        lines.forEach(line => {
+            let utterance = new SpeechSynthesisUtterance(line);
+
+            if (voices.length > 0) {
+                if (line.includes("Afro-pessimist")) {
+                    utterance.voice = pessimistVoice || voices[0]; // Fallback to first available voice
+                } else if (line.includes("Afrofuturist")) {
+                    utterance.voice = futuristVoice || voices[1]; // Fallback to second available voice
+                }
+                speechSynthesis.speak(utterance);
+            } else {
+                console.error('Voices not loaded yet. Defaulting to system voice.');
+                speechSynthesis.speak(utterance); // Use default system voice
             }
-        }
+        });
+
+    } catch (error) {
+        console.error('Error generating text:', error);
+        document.getElementById('conversation').innerText = "An error occurred. Please try again.";
+    }
+}
 
         // Automatically generate dialogue every 10 seconds
-        setInterval(generateDialogue, 10000);
+        setInterval(generateDialogue, 1000);
     </script>
 
 </body>
